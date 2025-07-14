@@ -1,5 +1,7 @@
 
-# 🛡️ SlimShield
+# 🛡️ SlimShield · ![Python](https://img.shields.io/badge/python-3.10+-blue) ![License](https://img.shields.io/github/license/muthusethu/slimshield) ![Stars](https://img.shields.io/github/stars/muthusethu/slimshield?style=social)
+
+> Docker security scanner + base image optimizer — built for DevSecOps pipelines
 
 **SlimShield** is a powerful CLI tool by [ItsCloudHub](https://itscloudhub.com) that helps DevOps and platform engineers:
 
