@@ -41,7 +41,7 @@
 1.  **Clone the repo**
 
 ```bash
-git  clone  https://its-chub@dev.azure.com/its-chub/slimshield/_git/slimshield
+git  clone  https://github.com/muthusethu/slimshield.git
 
 cd  slimshield
 ```
@@ -78,31 +78,43 @@ sudo  apt  install  trivy  # Ubuntu
 
 🧪  **Usage**
 
-**Scan  a  Dockerfile**
+🔍 **Scan  a  Dockerfile**
 
 ```bash
 python  cli.py  --dockerfile  test_dockerfiles/sample.Dockerfile
 ``` 
 
-**Scan a Dockerfile and generate JSON report**
+🔍 **Scan a Dockerfile and generate JSON report**
 
 ```bash
 python cli.py --dockerfile test_dockerfiles/sample.Dockerfile --format json
 ``` 
 
-**Scan  a  Docker  Image**
+🔍 **Scan a Dockerfile and generate HTML report**
+
+```bash
+python cli.py --dockerfile test_dockerfiles/sample.Dockerfile --format html
+``` 
+
+🐳 **Scan  a  Docker  Image**
 
 ```
 python  cli.py  --image  nginx:latest
 ```
 
-**Scan a Docker image and export JSON report**
+🐳 **Scan a Docker image and export JSON report**
 
 ```
 python cli.py --image nginx:latest --format json
 ``` 
 
-✅ JSON reports will be saved under the reports/ folder with a timestamped filename.
+🐳 **Scan a Docker image and export HTML report**
+
+```
+python cli.py --image nginx:latest --format html
+``` 
+
+📆 Reports will be saved under the reports/ folder with a timestamped filename.
 
 📦  **Slim  Base  Image  Suggestions**
 
