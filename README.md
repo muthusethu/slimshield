@@ -84,30 +84,25 @@ sudo  apt  install  trivy  # Ubuntu
 python  cli.py  --dockerfile  test_dockerfiles/sample.Dockerfile
 ``` 
 
-Output:
+**Scan a Dockerfile and generate JSON report**
 
 ```bash
-[+] Base image found: python:3.10
-[*] Suggested minimal base images:
-	→  python:3.10-slim
-	→  python:3.10-alpine
-	
-[+] Scanning Dockerfile: sample.Dockerfile
-
-Report  Summary
-
-┌─────────────┬────────────┬───────────────────┐
-│  Target  │  Type  │  Misconfigurations  │
-├─────────────┼────────────┼───────────────────┤
-│  sample.Dockerfile  │  dockerfile  │  2  │
-└─────────────┴────────────┴───────────────────┘
+python cli.py --dockerfile test_dockerfiles/sample.Dockerfile --format json
 ``` 
 
 **Scan  a  Docker  Image**
 
 ```
 python  cli.py  --image  nginx:latest
+```
+
+**Scan a Docker image and export JSON report**
+
+```
+python cli.py --image nginx:latest --format json
 ``` 
+
+✅ JSON reports will be saved under the reports/ folder with a timestamped filename.
 
 📦  **Slim  Base  Image  Suggestions**
 
