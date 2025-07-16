@@ -1,6 +1,6 @@
 {
   "SchemaVersion": 2,
-  "CreatedAt": "2025-07-15T15:55:44.9795917Z",
+  "CreatedAt": "2025-07-16T18:55:52.2026519Z",
   "ArtifactName": "test_dockerfiles/sample.Dockerfile",
   "ArtifactType": "filesystem",
   "Metadata": {

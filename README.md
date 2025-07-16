@@ -8,8 +8,10 @@
 - ✅ Scan Dockerfiles or Docker images for security vulnerabilities and misconfigurations using [Trivy](https://github.com/aquasecurity/trivy)
 - ✅ Suggest minimal base images (`slim`, `alpine`, etc.) to optimize container size and security
 - ✅ Detect hardcoded secrets and sensitive ENV variables
+- ✅ Detect risky open-source licenses like GPL/AGPL/LGPL
 - ✅ Generate detailed JSON/HTML reports for audits
-- ✅ Fail builds if secrets are found (for CI/CD)
+- ✅ Analyze Docker image size layer-by-layer
+- ✅ Fail builds on secrets, high CVEs, or risky licenses (for CI/CD)
 - ✅ Easily integrate into local dev workflows or CI/CD pipelines
 
 ---
@@ -35,6 +37,8 @@
 | Fail build on secret detection | ✅ |
 | Export reports (JSON / HTML) | ✅ |
 | Quiet CLI mode | ✅ |
+| License violation detection | ✅ |
+| Image size breakdown | ✅ |
 | CI/CD friendly | ✅ |
 
 ---
@@ -111,6 +115,18 @@ python cli.py --dockerfile test_dockerfiles/sample.Dockerfile --quiet
 python cli.py --dockerfile test_dockerfiles/secret.Dockerfile --fail-on-secrets
 ``` 
 
+🔍 **Fail on High CVEs**
+
+```bash
+python cli.py --dockerfile test_dockerfiles/sample.Dockerfile --fail-on-high
+``` 
+
+🔍 **Fail on Risky Licenses (GPL, AGPL)**
+
+```bash
+python cli.py --dockerfile test_dockerfiles/sample.Dockerfile --fail-on-licenses
+``` 
+
 🐳 **Scan  a  Docker  Image**
 
 ```bash
@@ -142,15 +158,27 @@ python cli.py --image nginx:latest --fail-on-secrets
 When secrets are found:
 
 ```YAML
-❌ Secrets detected in test_dockerfiles/secret.Dockerfile
+❌ Secrets detected in nginx:latest
 
-🔑 ENV variable: SECRET_KEY
-📍 Line: 4
-🔒 Value (redacted): super-****-token
-💡 Tip: Avoid storing secrets in Dockerfile. Use external secret managers like HashiCorp Vault, AWS Secrets Manager, or Docker BuildKit secrets.
+🔐 Secrets Insight (regex fallback)
+- Line 5: Secrets │ Licenses │ Misconfigurations │
+- Line 167: tokens can trigger a denial of service  │
+❌ Secrets detected. Exiting with error due to --fail-on-secrets flag.
 ``` 
 
 Use --fail-on-secrets in CI/CD pipelines to block the deployment if secrets are detected.
+
+📦 **Image Size Analyzer**
+
+When scanning Docker images, SlimShield provides a breakdown of image size:
+
+```SQL
+📦 Image Size Breakdown:
+- 15.3 MB → RUN apt-get update
+- 23.0 MB → COPY . /app
+...
+🧮 Total Image Size: 120.5 MB
+```
 
 📦  **Slim  Base  Image  Suggestions**
 
@@ -166,18 +194,34 @@ SlimShield  currently  detects  these  and  suggests  lighter  alternatives:
 
 📈  **Roadmap**
 
-| Feature                                 | Status      |
-| --------------------------------------- | ----------- |
-| ✅ Trivy Scan HTML/JSON export           | Completed   |
-| ✅ Secret detection in Dockerfiles       | Completed   |
-| ✅ Fail on secrets flag                  | Completed   |
-| ✅ Docker image scan support             | Completed   |
-| 🔄 Detect secrets inside Docker images  | In Progress |
-| 🔄 Best practice linter for Dockerfiles | Planned     |
-| 🔄 Multi-stage build detection          | Planned     |
-| 🔄 GitHub Action for CI scans           | Planned     |
-| 🔄 SaaS dashboard (SlimShield Cloud)    | Planned     |
-| 🔄 Image Size Analyzer                  | Planned     |
+| Feature                                | Status      |
+| -------------------------------------- | ----------- |
+| ✅ Trivy Scan HTML/JSON export          | Completed   |
+| ✅ Secret detection in Dockerfiles      | Completed   |
+| ✅ Fail on secrets flag                 | Completed   |
+| ✅ Docker image scan support            | Completed   |
+| ✅ License scanning                     | Completed   |
+| ✅ Image size breakdown                 | Completed   |
+| 🔄 Detect secrets inside Docker images | In Progress |
+| 🔄 Best practice linter                | Planned     |
+| 🔄 Multi-stage build detection         | Planned     |
+| 🔄 GitHub Action for CI scans                       | Planned     |
+| 🔄 SaaS dashboard (SlimShield Cloud)          | Planned     |
+
+### ✅ Feature Matrix (Dockerfile vs Image Support)
+
+| Feature/Option             | Dockerfile (`--dockerfile`) | Image (`--image`) |
+|---------------------------|------------------------------|--------------------|
+| `--format table`          | ✅                            | ✅                  |
+| `--format json`           | ✅                            | ✅                  |
+| `--format html`           | ✅                            | ✅                  |
+| `--quiet`                 | ✅                            | ✅                  |
+| `--fail-on-secrets`       | ✅                            | ✅                  |
+| `--fail-on-high`          | ✅                            | ✅                  |
+| `--fail-on-licenses`      | ✅                            | ✅                  |
+| 🔐 Secret Detection        | ✅ (Trivy + Regex fallback)   | ✅ (Trivy)          |
+| 💡 Base Image Suggestions | ✅                            | ❌ (N/A)            |
+| 📦 Image Size Breakdown   | ❌ (N/A)                      | ✅                  |
 
 👨‍💻  **Author**
 

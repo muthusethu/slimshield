@@ -1,3 +1,5 @@
+# base_image_suggester.py
+
 BASE_IMAGE_SUGGESTIONS = {
     "python": ["python:3.10-slim", "python:3.10-alpine"],
     "node": ["node:18-slim", "node:18-alpine"],
@@ -6,25 +8,47 @@ BASE_IMAGE_SUGGESTIONS = {
     "golang": ["golang:1.18-alpine"],
 }
 
-def suggest_base_images(dockerfile_path: str):
+
+def extract_base_image(dockerfile_path: str) -> str | None:
+    """
+    Extract the base image name from a Dockerfile.
+    """
+    try:
+        with open(dockerfile_path, 'r') as file:
+            for line in file:
+                if line.strip().startswith("FROM"):
+                    return line.strip().split()[1]
+    except FileNotFoundError:
+        return None
+    return None
+
+
+def suggest_base_images(dockerfile_path, only_suggestions=False, return_suggestions=False):
     base_image = None
-    with open(dockerfile_path, 'r') as file:
-        for line in file:
+    suggestions = []
+
+    with open(dockerfile_path, "r") as f:
+        for line in f:
             if line.strip().startswith("FROM"):
                 base_image = line.strip().split()[1]
                 break
 
-    if not base_image:
-        print("No base image found.")
-        return
+    if base_image:
+        if "python" in base_image:
+            parts = base_image.split(":")
+            if len(parts) == 2:
+                tag = parts[1]
+                suggestions = [f"{parts[0]}:{tag}-slim", f"{parts[0]}:{tag}-alpine"]
+        elif "node" in base_image:
+            parts = base_image.split(":")
+            if len(parts) == 2:
+                tag = parts[1]
+                suggestions = [f"{parts[0]}:{tag}-alpine"]
 
-    print(f"[+] Base image found: {base_image}")
-    base = base_image.split(":")[0]
-    suggestions = BASE_IMAGE_SUGGESTIONS.get(base)
+    if return_suggestions:
+        return base_image, suggestions
 
-    if suggestions:
-        print("[*] Suggested minimal base images:")
-        for s in suggestions:
-            print(f"    → {s}")
+    if only_suggestions:
+        return suggestions
     else:
-        print("[*] No suggestions available for this base image.")
+        return base_image
